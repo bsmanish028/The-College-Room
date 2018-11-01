@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The College Room&reg;</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+<style>
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  margin: auto;
+  text-align: center;
+  font-family: arial;
+  background-color: purple;
+}
+
+.title {
+  color: grey;
+  font-size: 18px;
+}
+
+button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.logo {
+  text-decoration: none;
+  font-size: 22px;
+  color: black;
+  padding: 2px;
+}
+
+button:hover, a:hover {
+  opacity: 0.7;
+}
+.imgcontainer {
+    text-align: center;
+    margin: 16px 0 24px 0;
+    position: relative;
+}
+
+img.avatar {
+    width: 80%;
+    height: 112%;
+    border-radius: 50%;
+}
+</style>
+</head>
+<body class="bg-secondary">
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                   The College Room&reg;
+                </a>
+
+                <div class="dropdown navbar-right">
+                    <button 
+                    id="user-email"
+                    class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    >
+                        thecollegeroom@gmail.com
+                    </button>
+
+                    <div 
+                        class="dropdown-menu"
+                        aria-labeledby="user-email"
+                    >
+                        <a class="dropdown-item" href="/admin.html">
+                            Home
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            Setting
+                        </a>
+                        <a class="dropdown-item" href="/contact.html">
+                            Contact
+                        </a>
+                        <a id="logout" class="dropdown-item" href="thecollegeroom.tk">
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+<h2 style="text-align:center;margin-top: 0%;">My Profile</h2>
+
+<div class="card">
+  <div class="imgcontainer">
+      <img src="abcd.jpg" alt="user-profile_pic" class="avatar">
+    </div>
+  <h1 id="user-name">Abinash Dutta</h1>
+  <small id="user-emaila">thecollegeroom@gmail.com</small>
+  <p class="title" id="user-position">CTO & Co-founder, TCR</p>
+  <p id="user-inst">NIT Silchar</p>
+  <div style="margin: 24px 0;">
+    <a id="facebook" class="logo" href="#" target="_blank"><i class="fa fa-facebook"></i></a>   
+    <a id="linkedin" class="logo" href="#" target="_blank"><i class="fa fa-linkedin"></i></a>
+    <a id="github" class="logo" href="#" target="_blank"><i class="fa fa-github"></i></a> 
+    <a id="instagram" class="logo" href="#" target="_blank"><i class="fa fa-instagram"></i></a>
+    
+ </div>
+ <small style="text-align: right;"><a href="updateprofile.html"><b>Update</b></a></small>
+ <p><button>&copy;The College Room</button></p>
+ <!--sub style="margin-bottom:14px; ">The College Room&reg;</sub-->
+</div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        
+            firebase.auth().onAuthStateChanged(function(user){
+            if (user){
+
+                if (user != null) {
+                    var email = user.email;
+                    var userName = document.getElementById('user-name');
+                    var userPost = document.getElementById('user-position');
+                    var userInst = document.getElementById('user-inst');
+                    var userFId = document.getElementById('facebook');
+                    
+                    document.getElementById('user-email').innerHTML=""+email;
+                    document.getElementById('user-emaila').innerHTML=""+email;
+                    
+                    var FirebaseusernameRef = firebase.database().ref('users').child(user.uid).child('name');
+                    FirebaseusernameRef.on('value' ,function(namesnapshot){
+                      userName.innerHTML = namesnapshot.val();
+                    });
+
+                    
+                    var FirebaseusernameRef = firebase.database().ref('users').child(user.uid).child('Designation');
+                    FirebaseusernameRef.on('value' ,function(designationsnapshot){
+                      userPost.innerHTML = designationsnapshot.val();
+                    });
+
+                    
+                    var FirebaseusernameRef = firebase.database().ref('users').child(user.uid).child('Instname');
+                    FirebaseusernameRef.on('value' ,function(Institutesnapshot){
+                      userInst.innerHTML = Institutesnapshot.val();
+                    });
+
+                    var FirebaseusernameRef = firebase.database().ref('users').child(user.uid).child('facebook');
+                    FirebaseusernameRef.on('value' ,function(Facebooksnapshot){
+                    var fb = Facebooksnapshot.val();
+                    });
+                    $("#facebook").attr("href", fb);
+
+
+                }
+                
+
+                var name = getInputVal('fname');
+                var lastname = getInputVal('lname');
+                var addemail = getInputVal('addemail');
+                var Instname = getInputVal('Instname');
+
+                  var user = firebase.auth().currentUser;
+                      firebase.database().ref("users").child(user.uid).set({
+                          email: user.email,
+                          uid : user.uid,
+                          name: name,
+                          lastname:lastname,
+                          addemail:addemail,
+                          Instname:Instname,
+
+                      });
+
+                      function getInputVal(id){
+                return document.getElementById(id).value;
+              }
+
+
+           
+            }else{
+                   window.location.href = "index.html";
+                  }
+            });
+
+            
+
+          // Retrieve user-data from database
+         /* var dbuserEmail = firebase.database().ref("users");
+              dbuserEmail.on("value",function(users){
+
+            if (users.exists()) {
+             /* var usershtml = "";
+              users.forEach(function(user){
+
+                usershtml += "<small>"
+                usershtml += user.val().email;
+                usershtml += "</small>"
+                });
+
+        $("#getemail").html(usershtml);
+
+      }*/
+
+
+
+
+  </script>
+
+</body>
+</html>

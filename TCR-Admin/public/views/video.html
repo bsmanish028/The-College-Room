@@ -1,0 +1,202 @@
+<h2>Video Section</h2>
+
+<hr/>
+
+<div class="row">
+	<div class="col-lg-5">
+		<h4>Add New Video</h4>
+		<form id="category-form">
+			
+			<div class="form-group">
+				<label for="only-video">Add/Select Video</label>
+				<input type="file" class="form-control" id="only-video"/>
+				<div class="invalid-feedback">
+					Select a valid File type.
+				</div>
+			</div>
+			<div class="form-group">
+				
+			    <video width="340" height="250" controls poster="#" id="selected-video">
+					<source src="#" type="video/mp4">
+				    <source src="#" type="video/ogg">
+				    <source src="#" type="video/3gp">
+				    <source src="#" type="video/flv">
+				    <source src="#" type="video/mpeg">
+					  Your browser does not support the video tag.
+				</video>
+			</div>
+			<div class="form-group">
+				<label for="video-desc">Enter Description</label>
+				<input type="text" class="form-control" id="video-desc"/>
+				<div class="invalid-feedback">
+					Enter a Short Description about Video.
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="progress">
+					<div class="progress-bar" id="upload-progress" style="width: 0%">0%</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<button type="button" id="upload-video" class="btn btn-primary">Upload</button>
+			</div>
+		</form>
+		<div id="result">
+			
+		</div>
+	</div>
+
+	<div class="col-lg-7">
+		<h4 style="text-align: center;">Older Videos</h4>
+        <table class="table table-striped"style="border: 1px solid #ddd;border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th style="background-color: #634c99;color: white;">Name</th>
+                    <th style="background-color: #634c99;color: white;text-align: center;">Description</th>
+                    <th style="background-color: #634c99;color: white; text-align: center;">Thumbnail</th>
+                </tr>
+            </thead>
+            <tbody id="categories" style="text-align: center;margin-top: 20px;">
+                
+            </tbody>
+        </table>
+	</div>
+</div>
+
+<script>
+	var validFileTypes = ["video/mp4","video/3gp","video/mpeg","video/flv"];
+
+    $("#selected-video").hide();
+
+    function previewThumbnail(thumbnail){
+        if(thumbnail.files && thumbnail.files[0]){
+            var reader = new FileReader(); 
+
+            reader.onload = function(e){
+                $("#selected-video").attr('src', e.target.result);
+                $("#selected-video").fadeIn(function(){
+                	alert("The video is now loaded Completely,\n You must verify it before uploading.\n\n Thankyou..!!");
+                });
+            }
+            reader.readAsDataURL(thumbnail.files[0]);
+        }
+    }
+
+    $("#only-video").change(function(){
+        previewThumbnail(this);
+    });
+
+    $("#upload-video").click(function(){
+        $("#video-desc").removeClass("is-invalid");
+        $("#only-video").removeClass("is-invalid");
+
+        var desc = $("#video-desc").val(); 
+        var thumbnail = $("#only-video").prop("files")[0];
+
+        if(!desc){
+            $("#video-desc").addClass("is-invalid");
+            return; 
+        }
+
+        if(thumbnail == null){
+            $("#only-video").addClass("is-invalid");
+            return; 
+        }
+
+        if($.inArray(thumbnail["type"], validFileTypes)<0){
+            $("#only-video").addClass("is-invalid");
+            return; 
+        }
+
+        //upload the image and save news
+
+        var database = firebase.database().ref("VideoNews/"+desc);
+        database.once("value").then(function(snapshot){
+            
+            if(snapshot.exists()){
+                $("#result").attr("class", "alert alert-danger");
+                $("#result").html("News already exist");
+                 resetForm();
+            }else{
+                //1. upload the selected thumbnail to firebase storage
+                var name = thumbnail["name"];
+                var ext = name.substring(name.lastIndexOf("."), name.length);
+                var thumbname = new Date().getTime(); 
+                var storageRef = firebase.storage().ref(desc + "/" + thumbname + ext);
+                var uploadTask = storageRef.put(thumbnail);
+                uploadTask.on("state_changed", 
+
+                    function progress(snapshot){
+                        var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100; 
+                        $("#upload-progress").html(Math.round(percentage) + "%");
+                        $("#upload-progress").attr("style", "width:"+percentage + "%");
+                    }, 
+
+                    function error(err){
+                    }, 
+
+                    function complete(){
+                        var thumbnailUrl = uploadTask.snapshot.downloadURL; 
+                        
+                        var cat = {
+                            "thumbnail": thumbnailUrl, 
+                            "desc": desc
+                        };
+                        database.set(cat, function(err){
+                            if(err){
+                                $("#result").attr("class", "alert alert-danger");
+                                $("#result").html(err.message);
+                            }else{
+                                $("#result").attr("class", "alert alert-success");
+                                $("#result").html("Video News Uploaded");
+                            }
+                            resetForm();
+                        }); 
+                    }
+                
+                );
+            }
+        });
+    });
+
+    function resetForm(){
+    	$("#category-form")[0].reset();
+    	$("#selected-video").fadeOut();
+    	$("#upload-progress").html("Completed");   
+    }
+
+
+    var dbCategories = firebase.database().ref("VideoNews");
+    dbCategories.on("value",function(categories){
+
+        if (categories.exists()) {
+            var categorieshtml = "";
+            categories.forEach(function(category){
+
+                categorieshtml += "<tr>";
+                
+                //for categories name
+                categorieshtml += "<td>"
+                categorieshtml += category.key;
+                categorieshtml += "</td>"
+
+
+                //for categories description
+                categorieshtml += "<td>"
+                categorieshtml += category.val().desc;
+                categorieshtml += "</td>"
+
+                //for categories thumbnail
+                categorieshtml += "<td> <video width='260' height='180' src='"
+                categorieshtml += category.val().thumbnail;
+                categorieshtml += "'/></td>"
+
+                categorieshtml += "</tr>";
+            });
+
+            $("#categories").html(categorieshtml);
+        }
+
+    });
+
+</script>

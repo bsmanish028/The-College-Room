@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>The College Room&reg;</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="style.css" />
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script>
+    
+</head>
+<body class="bg-secondary">
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">
+                   The College Room&reg;
+                </a>
+
+                <div class="dropdown navbar-right">
+                    <button 
+                    id="user-email"
+                    class="btn btn-secondary dropdown-toggle"
+                    type="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                    >
+                        http://thecollegeroom.tk
+                    </button>
+
+                    <div 
+                        class="dropdown-menu"
+                        aria-labeledby="user-email"
+                    >
+                        <a class="dropdown-item" href="index.html">
+                            Home
+                        </a>
+                        <a class="dropdown-item" href="#">
+                            About
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+      <div class="container">
+    <div class="wrapper">
+      <div style="color: white" class="company-info">
+        <h3>The College Room</h3>
+        <ul>
+          <li><i class="fa fa-home"></i> NIT Silchar</li>
+          <li><i class="fa fa-phone"></i> 9204894966</li>
+          <li><i class="fa fa-envelope"></i> thecollegeroom@gmail.com</li>
+          <li><i class="fa fa-cloud"></i> www.thecollegeroom.com</li>
+        </ul>
+      </div>
+      <div class="contact">
+        <h3>Contact Us</h3>
+        <div class="alert">Your message has been sent</div>
+        <form id="contactForm">
+          <p>
+            <label>Name*</label>
+            <input type="text" name="name" id="name" required>
+          </p>
+          <p>
+            <label>Institute Name*</label>
+            <input type="text" name="company" id="company" required>
+          </p>
+          <p>
+            <label>Email Address*</label>
+            <input type="email" name="email" id="email" required>
+          </p>
+          <p>
+            <label>Phone Number</label>
+            <input type="text" name="phone" id="phone">
+          </p>
+          <p class="full">
+            <label>Message*</label>
+            <textarea name="message" rows="5" id="message" placeholder="Write your Message/Complaint/Suggestion here..." required></textarea>
+          </p>
+          <p class="full">
+            <button style="background-color: purple;border-radius: 2%;cursor: pointer;" type="submit">Submit</button>
+          </p>
+        </form>
+      </div>
+    </div>
+  </div>
+<script src="js/message.js"></script>
+        <script>
+
+
+
+
+
+        </script>
+</body>
+</html>
